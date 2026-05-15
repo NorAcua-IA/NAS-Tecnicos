@@ -3308,9 +3308,15 @@ function App() {
     }, /*#__PURE__*/React.createElement("span", {
       style: { fontWeight: 700, fontSize: 12 }
     }, _title),
+    proy && /*#__PURE__*/React.createElement("span", {
+      style: { fontSize: 11, color: C.textSec, fontWeight: 600 }
+    }, "· " + (proy.nombre || proy.po || "")),
     proy?.estacion && /*#__PURE__*/React.createElement("span", {
       style: { fontSize: 11, color: C.primary }
     }, "· " + proy.estacion),
+    !r.esGrupo && r.trabajador && /*#__PURE__*/React.createElement("span", {
+      style: { fontSize: 11, color: C.muted }
+    }, "· " + r.trabajador),
     /*#__PURE__*/React.createElement("span", {
       style: { fontSize: 11, color: C.muted }
     }, "· " + fmtD(r.fecha)),
@@ -7852,8 +7858,35 @@ function App() {
         textAlign: "right",
         outline: "none"
       }
-    })));
-  }))), isAdmin && /*#__PURE__*/React.createElement(Sel, {
+    })), /*#__PURE__*/React.createElement("button", {
+      onClick: () => setMEReg(r => ({
+        ...r,
+        lineasGrupo: r.lineasGrupo.filter((_, j) => j !== i)
+      })),
+      style: {
+        background: "none", border: "none", cursor: "pointer",
+        color: C.danger, fontSize: 14, padding: "2px 4px",
+        borderRadius: 3, fontFamily: "inherit", lineHeight: 1
+      }
+    }, "×"))
+  })), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setMEReg(r => ({
+      ...r,
+      lineasGrupo: [...(r.lineasGrupo || []), {
+        id: "lg_" + Date.now(),
+        conceptoId: concsActivos[0]?.id || "",
+        cantidad: 1,
+        observaciones: "",
+        precioManual: null
+      }]
+    })),
+    style: {
+      marginTop: 8, padding: "5px 12px", fontSize: 11,
+      background: C.primary, color: "#fff", border: "none",
+      borderRadius: 5, cursor: "pointer", fontFamily: "inherit"
+    }
+  }, "+ Añadir línea")
+  ), isAdmin && /*#__PURE__*/React.createElement(Sel, {
     label: "Estado",
     value: mEReg.estado,
     onChange: v => setMEReg(r => ({
