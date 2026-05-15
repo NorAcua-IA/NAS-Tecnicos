@@ -2119,19 +2119,10 @@ function App() {
     estado: "pendiente"
   } : x));
   const certifyReg = (id) => {
-    const uds = udsCertif[id];
-    if (!uds) return;
     setRegistros(r => r.map(x => x.id === id ? {
       ...x,
-      estado: "certificado",
-      udsCertificadas: x.esGrupo
-        ? (x.lineasGrupo || []).map((l, i) => ({
-            ...l,
-            udsCertificadas: Number((uds[i] ?? l.cantidad) || 0)
-          }))
-        : Number(uds || x.cantidad || 1)
+      estado: "certificado"
     } : x));
-    setUdsCertif(u => { const n = {...u}; delete n[id]; return n; });
   };
   const sPM = (id, v) => setRegistros(r => r.map(x => x.id === id ? {
     ...x,
@@ -2762,7 +2753,7 @@ function App() {
   // FIX #6 + #9: filtrado registros
   const rFiltrados = useMemo(() => {
     let r = [...registros];
-    if (!isAdmin) r = r.filter(x => x.trabajador === user?.nombre || x.creadoPor === user?.nombre);
+    if (!isAdmin) r = r.filter(x => x.trabajador === user?.nombre || x.creadoPor === user?.nombre || x.trabajador === user?.id || x.creadoPor === user?.id);
     if (filtroRPid) r = r.filter(x => x.proyectoId === filtroRPid);
     if (filtroRES) r = r.filter(x => gP(x.proyectoId)?.estacion === filtroRES);
     if (filtroRSt) r = r.filter(x => x.estado === filtroRSt);
@@ -7757,26 +7748,36 @@ function App() {
         padding: "6px 0",
         borderBottom: i < mEReg.lineasGrupo.length - 1 ? `1px solid ${C.border}` : "none"
       }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: { display: "flex", gap: 6, marginBottom: 5 }
     }, /*#__PURE__*/React.createElement("select", {
+      value: (() => { const c = concsActivos.find(c2 => c2.id === l.conceptoId); return c?.capId || ""; })(),
+      onChange: e => setMEReg(r => ({
+        ...r,
+        lineasGrupo: r.lineasGrupo.map((x, j) => j === i ? { ...x, conceptoId: "" } : x)
+      })),
+      style: {
+        flex: 1, padding: "4px 7px", border: "1px solid " + C.border, borderRadius: 4,
+        fontSize: 12, fontFamily: "inherit", background: C.inputBg, outline: "none"
+      }
+    }, /*#__PURE__*/React.createElement("option", { value: "" }, "— Capítulo —"),
+    CAP_BASE.map(cap => /*#__PURE__*/React.createElement("option", { key: cap.cap, value: cap.cap }, cap.cap + ". " + cap.nombre))
+    ), /*#__PURE__*/React.createElement("select", {
       value: l.conceptoId || "",
       onChange: e => setMEReg(r => ({
         ...r,
         lineasGrupo: r.lineasGrupo.map((x, j) => j === i ? { ...x, conceptoId: e.target.value } : x)
       })),
       style: {
-        width: "100%", marginBottom: 5, padding: "4px 7px",
-        border: "1px solid " + C.border, borderRadius: 4,
+        flex: 2, padding: "4px 7px", border: "1px solid " + C.border, borderRadius: 4,
         fontSize: 12, fontFamily: "inherit", background: C.inputBg, outline: "none"
       }
-    }, /*#__PURE__*/React.createElement("option", { value: "" }, "— Seleccionar concepto —"),
-    CAP_BASE.map(cap => {
-      const items = concsActivos.filter(c2 => c2.capId === cap.cap);
-      if (!items.length) return null;
-      return /*#__PURE__*/React.createElement("optgroup", { key: cap.cap, label: cap.cap + ". " + cap.nombre },
-        items.map(c2 => /*#__PURE__*/React.createElement("option", { key: c2.id, value: c2.id }, c2.nombre))
-      );
-    })
-    ), /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("option", { value: "" }, "— Concepto —"),
+    concsActivos.filter(c2 => {
+      const selCap = (() => { const c = concsActivos.find(c3 => c3.id === l.conceptoId); return c?.capId || ""; })();
+      return !selCap || c2.capId === selCap;
+    }).map(c2 => /*#__PURE__*/React.createElement("option", { key: c2.id, value: c2.id }, c2.nombre))
+    )), /*#__PURE__*/React.createElement("div", {
       style: {
         display: "flex",
         gap: 7,
