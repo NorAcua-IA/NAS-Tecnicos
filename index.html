@@ -8802,5 +8802,28 @@ function App() {
 }
 
 
-ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
+class ErrorBoundary extends React.Component {
+  constructor(props) { super(props); this.state = { error: null, info: null }; }
+  componentDidCatch(error, info) { this.setState({ error, info }); }
+  render() {
+    if (this.state.error) {
+      return React.createElement('div', {
+        style: { fontFamily:'monospace', padding:32, background:'#fff0f0', border:'2px solid #d03030', borderRadius:8, margin:24, whiteSpace:'pre-wrap', wordBreak:'break-all' }
+      },
+        React.createElement('h2', { style:{color:'#d03030',marginBottom:12} }, '💥 Error capturado'),
+        React.createElement('b', null, String(this.state.error)),
+        React.createElement('hr', {style:{margin:'12px 0'}}),
+        React.createElement('pre', { style:{fontSize:11,color:'#555'} },
+          this.state.error.stack || '(sin stack)',
+          '\n\n--- Component Stack ---\n',
+          (this.state.info && this.state.info.componentStack) || ''
+        )
+      );
+    }
+    return this.props.children;
+  }
+}
+ReactDOM.createRoot(document.getElementById('root')).render(
+  React.createElement(ErrorBoundary, null, React.createElement(App))
+);
 </script></body></html>
