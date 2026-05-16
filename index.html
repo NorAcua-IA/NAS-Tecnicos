@@ -2823,7 +2823,7 @@ function App() {
     i: P.clip
   }, {
     k: "revision",
-    l: "Revisión",
+    l: "Certificación",
     i: P.eye
   }, ...(isAdmin ? [{
     k: "informes",
@@ -3430,254 +3430,57 @@ function App() {
       d: P.edit,
       sz: 13
     }))))));
-  })), view === "revision" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h2", {
-    style: {
-      fontSize: 17,
-      fontWeight: 700,
-      marginBottom: 12
-    }
-  }, isAdmin ? "Revisión de trabajos" : "Mis trabajos"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 7,
-      marginBottom: 11,
-      flexWrap: "wrap"
-    }
-  }, isAdmin && /*#__PURE__*/React.createElement("select", {
-    value: filtroRPid,
-    onChange: e => setFiltroRPid(e.target.value),
-    style: {
-      padding: "5px 9px",
-      border: `1px solid ${C.border}`,
-      borderRadius: 5,
-      fontSize: 11,
-      fontFamily: "inherit",
-      background: C.inputBg
-    }
-  }, /*#__PURE__*/React.createElement("option", {
-    value: ""
-  }, "Todos proyectos"), proyectos.map(p => /*#__PURE__*/React.createElement("option", {
-    key: p.id,
-    value: p.id
-  }, p.nombre, p.estacion ? ` | ${p.estacion}` : "", " (", p.zona, ")"))), /*#__PURE__*/React.createElement("select", {
-    value: filtroRSt,
-    onChange: e => setFiltroRSt(e.target.value),
-    style: {
-      padding: "5px 9px",
-      border: `1px solid ${C.border}`,
-      borderRadius: 5,
-      fontSize: 11,
-      fontFamily: "inherit",
-      background: C.inputBg
-    }
-  }, /*#__PURE__*/React.createElement("option", {
-    value: ""
-  }, "Todos estados"), ["pendiente", "aprobado", "rechazado"].map(s => /*#__PURE__*/React.createElement("option", {
-    key: s,
-    value: s
-  }, s.charAt(0).toUpperCase() + s.slice(1)))), isAdmin && /*#__PURE__*/React.createElement("select", {
-    value: filtroRCreador,
-    onChange: e => setFiltroRCreador(e.target.value),
-    style: {
-      padding: "5px 9px",
-      border: `1px solid ${C.border}`,
-      borderRadius: 5,
-      fontSize: 11,
-      fontFamily: "inherit",
-      background: C.inputBg
-    }
-  }, /*#__PURE__*/React.createElement("option", {
-    value: ""
-  }, "Todos los creadores"), trabs.map(t => /*#__PURE__*/React.createElement("option", {
-    key: t,
-    value: t
-  }, t)))), rFiltrados.map(r => {
-    const pu = gPU(r),
-      tot = gT(r);
-    const sinP = isAdmin && (gC(r.conceptoId)?.p?.[gP(r.proyectoId)?.zona || ""] ?? null) === null;
-    const proy = gP(r.proyectoId);
-    return /*#__PURE__*/React.createElement("div", {
-      key: r.id,
-      style: {
-        ...rowSt,
-        display: "flex",
-        flexDirection: "column",
-        gap: 7
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        display: "flex",
-        justifyContent: "space-between"
-      }
-    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontWeight: 700,
-        fontSize: 13
-      }
-    }, gC(r.conceptoId)?.nombre || "—"), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 11,
-        color: C.muted,
-        display: "flex",
-        gap: 7,
-        flexWrap: "wrap"
-      }
-    }, /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontWeight: 600,
-        color: C.textSec
-      }
-    }, proy?.nombre || "—"), proy?.estacion && /*#__PURE__*/React.createElement("span", {
-      style: {
-        color: C.primary
-      }
-    }, "\xB7 ", proy.estacion), /*#__PURE__*/React.createElement("span", null, "\xB7 ", r.trabajador), /*#__PURE__*/React.createElement("span", null, "\xB7 ", fmtD(r.fecha)), /*#__PURE__*/React.createElement("span", null, "\xB7 Cant: ", r.cantidad || 1), isAdmin && r.creadoPor && /*#__PURE__*/React.createElement("span", {
-      style: {
-        color: C.muted
-      }
-    }, "\xB7 Creado: ", r.creadoPor)), r.observaciones && /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 11,
-        color: C.muted,
-        fontStyle: "italic"
-      }
-    }, "\"", r.observaciones, "\"")), /*#__PURE__*/React.createElement(EBdg, {
-      estado: r.estado
-    }), !isAdmin && r.estado === "aprobado" && /*#__PURE__*/React.createElement(Btn, {
-      sm: true,
-      variant: "success",
-      onClick: () => certifyReg(r.id)
-    }, "⚡ Certificar")
-    )), isAdmin && /*#__PURE__*/React.createElement("div", {
-      style: {
-        display: "flex",
-        alignItems: "center",
-        gap: 7,
-        flexWrap: "wrap"
-      }
-    }, sinP && /*#__PURE__*/React.createElement("div", {
-      style: {
-        display: "flex",
-        alignItems: "center",
-        gap: 4
-      }
-    }, /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 11,
-        color: C.warn,
-        fontWeight: 600
-      }
-    }, "P.\u20AC:"), /*#__PURE__*/React.createElement("input", {
-      type: "number",
-      value: r.precioManual ?? "",
-      onChange: e => sPM(r.id, e.target.value),
-      style: {
-        width: 75,
-        padding: "3px 6px",
-        border: `1px solid ${C.border}`,
-        borderRadius: 4,
-        fontSize: 12,
-        fontFamily: "inherit",
-        background: C.inputBg
-      }
-    })), pu != null && /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 11,
-        fontWeight: 700,
-        color: C.textSec
-      }
-    }, fmtE(pu), " \xD7 ", r.cantidad || 1, " = ", /*#__PURE__*/React.createElement("strong", null, fmtE(tot))), /*#__PURE__*/React.createElement("div", {
-      style: {
-        marginLeft: "auto",
-        display: "flex",
-        gap: 4,
-        flexWrap: "wrap"
-      }
-    }, r.estado !== "aprobado" && /*#__PURE__*/React.createElement(Btn, {
-      sm: true,
-      variant: "success",
-      onClick: () => apro(r.id)
-    }, /*#__PURE__*/React.createElement(Ic, {
-      d: P.chk,
-      sz: 10
-    }), " Aprobar"), r.esGrupo && isAdmin && /*#__PURE__*/React.createElement(Btn, {
-      sm: true,
-      variant: "ghost",
-      style: {
-        color: "#7c3aed",
-        borderColor: "#7c3aed"
-      },
-      onClick: () => {
-        const p = gP(r.proyectoId);
-        const cl = gCL(p?.clienteId);
-        const lineas = (r.lineasGrupo || []).map(l => ({
-          id: `lo${Date.now()}${Math.random().toString(36).slice(2)}`,
-          conceptoId: l.conceptoId,
-          cantidad: l.cantidad,
-          precioUnit: gC(l.conceptoId)?.p?.[p?.zona] ?? 0,
-          descuento: 0,
-          total: gC(l.conceptoId)?.p?.[p?.zona] ?? 0,
-          observaciones: l.observaciones
-        }));
-        setEditOferta({
-          id: null,
-          numero: genNumOferta(cfgOfertas),
-          asunto: p?.nombre || "",
-          version: 1,
-          referencia: "",
-          fecha: today(),
-          emplazamiento: p?.estacion || "",
-          zona: p?.zona || "",
-          clienteId: p?.clienteId || "",
-          firmanteCliente: "",
-          firmanteNorAcua: "D. Daniel Romero",
-          formaPago: cl?.formaPago || "Según contrato",
-          estado: "Borrador",
-          nota: "",
-          lineas,
-          proyectoId: r.proyectoId,
-          propuestaPor: null
-        });
-        setEditOfertaMode("new");
-        setCurView("ofertas");
-        setViewO("editor");
-      }
-    }, /*#__PURE__*/React.createElement(Ic, {
-      d: P.doc,
-      sz: 10
-    }), " \u2192 Oferta"), r.estado !== "rechazado" && /*#__PURE__*/React.createElement(Btn, {
-      sm: true,
-      variant: "danger",
-      onClick: () => rech(r.id)
-    }, /*#__PURE__*/React.createElement(Ic, {
-      d: P.x,
-      sz: 10
-    }), " Rechazar"), r.estado !== "pendiente" && /*#__PURE__*/React.createElement(Btn, {
-      sm: true,
-      variant: "ghost",
-      onClick: () => pend(r.id)
-    }, "Pendiente"), canEditReg(r) && /*#__PURE__*/React.createElement(Btn, {
-      sm: true,
-      variant: "ghost",
-      onClick: () => setMEReg({
-        ...r,
-        cantidad: String(r.cantidad || 1)
-      })
-    }, /*#__PURE__*/React.createElement(Ic, {
-      d: P.edit,
-      sz: 10
-    })), isAdmin && /*#__PURE__*/React.createElement(Btn, {
-      sm: true,
-      variant: "ghost",
-      onClick: () => delR(r.id),
-      style: {
-        color: C.danger
-      }
-    }, /*#__PURE__*/React.createElement(Ic, {
-      d: P.trash,
-      sz: 10
-    }))));
-  })), view === "informes" && isAdmin && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h2", {
+  })), view === "revision" && /*#__PURE__*/React.createElement(React.Fragment, null,
+  /*#__PURE__*/React.createElement("h2", {
+    style: { fontSize: 17, fontWeight: 700, marginBottom: 4 }
+  }, "Certificación"),
+  /*#__PURE__*/React.createElement("p", {
+    style: { fontSize: 12, color: C.muted, marginBottom: 14 }
+  }, "Actividades aprobadas pendientes de certificar"),
+  (() => {
+    const aprobadas = registros.filter(r =>
+      r.estado === "aprobado" &&
+      (r.trabajador === user?.nombre || r.creadoPor === user?.nombre ||
+       r.trabajador === user?.id || r.creadoPor === user?.id)
+    );
+    if (!aprobadas.length) return /*#__PURE__*/React.createElement("div", {
+      style: { textAlign: "center", color: C.muted, padding: "32px 0", fontSize: 13 }
+    }, "No hay actividades aprobadas pendientes de certificar");
+    return /*#__PURE__*/React.createElement(React.Fragment, null,
+      aprobadas.map(r => {
+        const proy = gP(r.proyectoId);
+        return /*#__PURE__*/React.createElement("div", {
+          key: r.id,
+          style: { ...rowSt, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }
+        },
+          /*#__PURE__*/React.createElement("div", { style: { flex: 1, minWidth: 0 } },
+            /*#__PURE__*/React.createElement("div", { style: { fontWeight: 700, fontSize: 13 } },
+              r.esGrupo
+                ? ("GRUPO · " + (r.lineasGrupo?.length || 0) + " actividades")
+                : (gC(r.conceptoId)?.nombre || "—")
+            ),
+            /*#__PURE__*/React.createElement("div", { style: { fontSize: 11, color: C.muted, marginTop: 2, display: "flex", gap: 8, flexWrap: "wrap" } },
+              proy && /*#__PURE__*/React.createElement("span", { style: { fontWeight: 600, color: C.textSec } }, proy.nombre),
+              proy?.estacion && /*#__PURE__*/React.createElement("span", null, "· " + proy.estacion),
+              /*#__PURE__*/React.createElement("span", null, "· " + fmtD(r.fecha)),
+              r.esGrupo && /*#__PURE__*/React.createElement("span", { style: { color: C.primary } },
+                "· " + (r.lineasGrupo || []).map(l => (gC(l.conceptoId)?.nombre || "—")).join(", ").substring(0, 60)
+              )
+            )
+          ),
+          /*#__PURE__*/React.createElement(Btn, {
+            sm: true,
+            variant: "success",
+            onClick: () => certifyReg(r.id)
+          }, "✓ Certificar")
+        );
+      }),
+      /*#__PURE__*/React.createElement("div", {
+        style: { marginTop: 16, padding: "10px 14px", background: C.cardL, borderRadius: 6, fontSize: 11, color: C.muted }
+      }, "Al certificar confirmas que el trabajo está completado. El administrador lo revisará antes de facturar.")
+    );
+  })()
+), view === "informes" && isAdmin && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h2", {
     style: {
       fontSize: 17,
       fontWeight: 700,
@@ -7749,33 +7552,34 @@ function App() {
         borderBottom: i < mEReg.lineasGrupo.length - 1 ? `1px solid ${C.border}` : "none"
       }
     }, /*#__PURE__*/React.createElement("div", {
-      style: { display: "flex", gap: 6, marginBottom: 5 }
+      style: { display: "flex", gap: 6, marginBottom: 5, flexWrap: "wrap" }
     }, /*#__PURE__*/React.createElement("select", {
-      value: (() => { const c = concsActivos.find(c2 => c2.id === l.conceptoId); return c?.capId || ""; })(),
+      value: l._capFiltro || (concsActivos.find(c2 => c2.id === l.conceptoId)?.capId || ""),
       onChange: e => setMEReg(r => ({
         ...r,
-        lineasGrupo: r.lineasGrupo.map((x, j) => j === i ? { ...x, conceptoId: "" } : x)
+        lineasGrupo: r.lineasGrupo.map((x, j) => j === i ? { ...x, _capFiltro: e.target.value, conceptoId: "" } : x)
       })),
       style: {
-        flex: 1, padding: "4px 7px", border: "1px solid " + C.border, borderRadius: 4,
+        flex: 1, minWidth: 120, padding: "4px 7px", border: "1px solid " + C.border, borderRadius: 4,
         fontSize: 12, fontFamily: "inherit", background: C.inputBg, outline: "none"
       }
     }, /*#__PURE__*/React.createElement("option", { value: "" }, "— Capítulo —"),
-    CAP_BASE.map(cap => /*#__PURE__*/React.createElement("option", { key: cap.cap, value: cap.cap }, cap.cap + ". " + cap.nombre))
-    ), /*#__PURE__*/React.createElement("select", {
+    CAP_BASE.filter(cap => concsActivos.some(c2 => c2.capId === cap.cap)).map(cap =>
+      /*#__PURE__*/React.createElement("option", { key: cap.cap, value: cap.cap }, cap.cap + ". " + cap.nombre)
+    )), /*#__PURE__*/React.createElement("select", {
       value: l.conceptoId || "",
       onChange: e => setMEReg(r => ({
         ...r,
         lineasGrupo: r.lineasGrupo.map((x, j) => j === i ? { ...x, conceptoId: e.target.value } : x)
       })),
       style: {
-        flex: 2, padding: "4px 7px", border: "1px solid " + C.border, borderRadius: 4,
+        flex: 2, minWidth: 160, padding: "4px 7px", border: "1px solid " + C.border, borderRadius: 4,
         fontSize: 12, fontFamily: "inherit", background: C.inputBg, outline: "none"
       }
     }, /*#__PURE__*/React.createElement("option", { value: "" }, "— Concepto —"),
     concsActivos.filter(c2 => {
-      const selCap = (() => { const c = concsActivos.find(c3 => c3.id === l.conceptoId); return c?.capId || ""; })();
-      return !selCap || c2.capId === selCap;
+      const capF = l._capFiltro || (concsActivos.find(c3 => c3.id === l.conceptoId)?.capId || "");
+      return !capF || c2.capId === capF;
     }).map(c2 => /*#__PURE__*/React.createElement("option", { key: c2.id, value: c2.id }, c2.nombre))
     )), /*#__PURE__*/React.createElement("div", {
       style: {
